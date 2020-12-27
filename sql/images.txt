@@ -1,0 +1,13 @@
+SELECT attachmentT.filename, messageT.date, id FROM message messageT INNER JOIN chat_message_join chatMessageT ON messageT.ROWID=chatMessageT.message_id INNER JOIN attachment attachmentT INNER JOIN message_attachment_join meAtJoinT ON attachmentT.ROWID=meAtJoinT.attachment_id
+	INNER JOIN chat_handle_join 
+		ON messageT.handle_id = chat_handle_join.handle_id
+	INNER JOIN handle 
+		ON handle.ROWID= chat_handle_join.handle_id 
+	WHERE meAtJoinT.message_id=messageT.ROWID AND (chatMessageT.chat_id={CHAT_ID})
+UNION
+SELECT attachmentT.filename, messageT.date, "me" as id FROM message messageT 
+	INNER JOIN chat_message_join chatMessageT ON messageT.ROWID=chatMessageT.message_id 
+	INNER JOIN attachment attachmentT 
+	INNER JOIN message_attachment_join meAtJoinT ON attachmentT.ROWID=meAtJoinT.attachment_id 
+	WHERE meAtJoinT.message_id=messageT.ROWID AND (chatMessageT.chat_id={CHAT_ID}) AND is_from_me
+ORDER BY messageT.date

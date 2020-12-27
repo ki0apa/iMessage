@@ -1,0 +1,17 @@
+SELECT text, messageT.date, id
+	FROM message AS messageT 
+	INNER JOIN chat_message_join AS chatMessageT 
+		ON (chatMessageT.chat_id={CHAT_ID}) 
+		AND messageT.ROWID=chatMessageT.message_id 
+	INNER JOIN chat_handle_join 
+		ON messageT.handle_id = chat_handle_join.handle_id
+	INNER JOIN handle 
+		ON handle.ROWID= chat_handle_join.handle_id 
+UNION
+SELECT text, messageT.date, "me" AS id
+	FROM message AS messageT 
+	INNER JOIN chat_message_join AS chatMessageT 
+		ON (chatMessageT.chat_id={CHAT_ID}) 
+		AND messageT.ROWID=chatMessageT.message_id 
+	WHERE is_from_me
+ORDER BY messageT.date
